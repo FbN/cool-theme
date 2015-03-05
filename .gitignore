@@ -1,2 +1,5 @@
 .*
 !.gitignore
+build.sh
+build.php
+
