@@ -5,4 +5,39 @@
     <author>Fabiano Taioli ftaioli@gmail.com</author>
     <link>fbn.github.io</link>
     <code>fbn.github.io/cool-theme</code>    
+    
+    <file path="system/engine/front.php">
+        <operation>
+            <search><![CDATA[public function dispatch($action, $error) {]]></search>
+            <add position="after" ><![CDATA[            
+            $this->registry->get('load')->library('resource');
+            $this->registry->get('load')->library('assets');
+            $this->registry->set('assets', new Assets($this->registry));
+            ]]></add>
+        </operation>
+    </file>
+    
+    <file path="system/library/response.php">
+        <operation>
+            <search><![CDATA[$this->output = $output;]]></search>
+            <add position="after" ><![CDATA[            
+            if (defined('COOL_THEME') && COOL_THEME) {
+	            $registry = $GLOBALS["registry"];       
+	            $this->output = $registry->get('assets')->render($this->output);
+	        }
+            ]]></add>
+        </operation>
+    </file>
+    
+    <file path="system/engine/loader.php">
+        <operation>
+            <search><![CDATA[public function view($template, $data = array()) {]]></search>
+            <add position="after" ><![CDATA[            
+            if (defined('COOL_THEME') && COOL_THEME) {
+            	$data['_assets'] = $this->registry->get('assets');
+	        }
+            ]]></add>
+        </operation>
+    </file>
+    
 </modification>
